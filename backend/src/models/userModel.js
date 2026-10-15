@@ -17,6 +17,7 @@ const userSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true,
+    enum: ["Student", "Organiser"],
   },
   isVerified: {
     type: Boolean,
@@ -29,6 +30,13 @@ const userSchema = new mongoose.Schema({
   isAdmin: {
     type: Boolean,
     default: false,
+  },
+  emailVerificationToken: {
+    type: String,
+  },
+  emailVerificationTokenExpiredIn: {
+    type: Date,
+    default: () => new Date(Date.now() + 15 * 60 * 1000),
   },
 });
 export const User = mongoose.model("users", userSchema);
