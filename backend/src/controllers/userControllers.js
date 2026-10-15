@@ -1,4 +1,7 @@
-import { validateFields } from "../services/userServices.js";
+import {
+  validateFields,
+  validateLoginFields,
+} from "../services/userServices.js";
 import "dotenv/config";
 import jwt from "jsonwebtoken";
 import { User } from "../models/userModel.js";
@@ -156,5 +159,19 @@ export const loginUser = async (req, res) => {
       statusCode: validateData.statusCode,
     });
   }
-  
+  const token = jwt.sign({ id: validateData.id }, process.env.AUTH_TOKEN, {
+    expiresIn: "15m",
+  });
+
+  const refreshToken = jwt.sign(
+    { id: validateData.data.id },
+    process.env.REFRESH_AUTH_TOKEN,
+    { expiresIn: "7d" },
+  );
+  return res.status(200).json({
+    isSuccess: true,
+    message: `Welcome ${validateData.data.name}`,
+    email: validateData.data.email,
+    category: validateData.data.category,
+  });
 };
