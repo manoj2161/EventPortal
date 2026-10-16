@@ -1,4 +1,5 @@
 import { User } from "../models/userModel.js";
+import { createHash } from "crypto";
 import bcrypt from "bcrypt";
 export const validateFields = async (name, email, password, category) => {
   const passwordRegex =
@@ -167,6 +168,7 @@ export const validateLoginFields = async (email, password) => {
       statusCode: 403,
     };
   }
+
   return {
     isSuccess: true,
     statusCode: 200,
@@ -177,4 +179,10 @@ export const validateLoginFields = async (email, password) => {
       category: existingUser.category,
     },
   };
+};
+export const hashRefreshToken = (refreshToken) => {
+  const hashedRefreshToken = createHash("sha256")
+    .update(refreshToken)
+    .digest("hex");
+  return hashedRefreshToken;
 };

@@ -1,6 +1,7 @@
 import {
   validateFields,
   validateLoginFields,
+  hashRefreshToken,
 } from "../services/userServices.js";
 import "dotenv/config";
 import jwt from "jsonwebtoken";
@@ -148,30 +149,61 @@ export const confirmEmail = async (req, res) => {
     });
   }
 };
-
 export const loginUser = async (req, res) => {
-  const { email, password } = req.body;
-  const validateData = await validateLoginFields(email, password);
-  if (validateData.isSuccess === false) {
-    return res.status(Number(validateData.statusCode)).json({
+  try {
+    const { email, password } = req.body ?? {};
+    const validateData = await validateLoginFields(email, password);
+    if (validateData.isSuccess === false) {
+      return res.status(Number(validateData.statusCode)).json({
+        isSuccess: false,
+        message: validateData.message,
+        statusCode: validateData.statusCode,
+      });
+    }
+
+    const token = jwt.sign(
+      { id: validateData.data.id },
+      process.env.AUTH_TOKEN,
+      { expiresIn: "15m" },
+    );
+    const refreshToken = jwt.sign(
+      { id: validateData.data.id },
+      process.env.REFRESH_AUTH_TOKEN,
+      { expiresIn: "7d" },
+    );
+
+    await User.findByIdAndUpdate(validateData.data.id, {
+      refreshTokenHash: hashRefreshToken(refreshToken),
+    });
+
+    res.cookie("authToken", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 15 * 60 * 1000,
+    });
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    return res.status(200).json({
+      isSuccess: true,
+      message: `Welcome ${validateData.data.name}`,
+      data: {
+        name: validateData.data.name,
+        email: validateData.data.email,
+        category: validateData.data.category,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
       isSuccess: false,
-      message: validateData.message,
-      statusCode: validateData.statusCode,
+      message: "Something went wrong",
+      statusCode: 500,
     });
   }
-  const token = jwt.sign({ id: validateData.id }, process.env.AUTH_TOKEN, {
-    expiresIn: "15m",
-  });
-
-  const refreshToken = jwt.sign(
-    { id: validateData.data.id },
-    process.env.REFRESH_AUTH_TOKEN,
-    { expiresIn: "7d" },
-  );
-  return res.status(200).json({
-    isSuccess: true,
-    message: `Welcome ${validateData.data.name}`,
-    email: validateData.data.email,
-    category: validateData.data.category,
-  });
 };
