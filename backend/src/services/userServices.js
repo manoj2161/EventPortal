@@ -180,9 +180,10 @@ export const validateLoginFields = async (email, password) => {
     },
   };
 };
-export const hashRefreshToken = (refreshToken) => {
+export const hashRefreshToken = (token, refreshToken) => {
+  const hashedToken = createHash("sha256").update(token).digest("hex");
   const hashedRefreshToken = createHash("sha256")
     .update(refreshToken)
     .digest("hex");
-  return hashedRefreshToken;
+  return { hashedRefreshToken, hashedToken };
 };

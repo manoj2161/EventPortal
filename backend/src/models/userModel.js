@@ -38,6 +38,9 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: () => new Date(Date.now() + 15 * 60 * 1000),
   },
+  authToken: {
+    type: String,
+  },
   refreshTokenHash: {
     type: String,
   },

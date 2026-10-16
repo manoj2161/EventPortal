@@ -160,7 +160,6 @@ export const loginUser = async (req, res) => {
         statusCode: validateData.statusCode,
       });
     }
-
     const token = jwt.sign(
       { id: validateData.data.id },
       process.env.AUTH_TOKEN,
@@ -171,9 +170,13 @@ export const loginUser = async (req, res) => {
       process.env.REFRESH_AUTH_TOKEN,
       { expiresIn: "7d" },
     );
-
+    const { hashedToken, hashedRefreshToken } = hashRefreshToken(
+      token,
+      refreshToken,
+    );
     await User.findByIdAndUpdate(validateData.data.id, {
-      refreshTokenHash: hashRefreshToken(refreshToken),
+      authToken: hashedToken,
+      refreshTokenHash: hashedRefreshToken,
     });
 
     res.cookie("authToken", token, {
@@ -205,5 +208,33 @@ export const loginUser = async (req, res) => {
       message: "Something went wrong",
       statusCode: 500,
     });
+  }
+};
+
+export const getProfile = async (req, res) => {
+  const category = ["Admin", "Student", "Organiser"];
+  const id = req.params.id;
+  try {
+    const user = await User.findById(id);
+    if (category.includes(user.category)) {
+      return res.status(200).json({
+        isSuccess: true,
+        data: {
+          name: user.name,
+          email: user.email,
+          category: user.category,
+        },
+        statusCode: 200,
+      });
+    }
+    if (category.includes(!user.category)) {
+      return res.status(403).json({
+        isSuccess: false,
+        message: "Invalid user category",
+        statusCode: 403,
+      });
+    }
+  } catch (error) {
+    console.error(error);
   }
 };
