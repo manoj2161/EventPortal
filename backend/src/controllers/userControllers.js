@@ -2,11 +2,15 @@ import {
   validateFields,
   validateLoginFields,
   hashRefreshToken,
+  validateStudentProfileFields,
+  validateTeacherProfileFields,
 } from "../services/userServices.js";
 import "dotenv/config";
 import jwt from "jsonwebtoken";
 import { User } from "../models/userModel.js";
 import { verifyEmail } from "../services/emailServices.js";
+import { Student } from "../models/studentProfileModel.js";
+import { Teacher } from "../models/teacherProfileModel.js";
 export const createUser = async (req, res) => {
   const { name, email, password, category } = req.body;
   try {
@@ -212,29 +216,171 @@ export const loginUser = async (req, res) => {
 };
 
 export const getProfile = async (req, res) => {
-  const category = ["Admin", "Student", "Organiser"];
-  const id = req.params.id;
   try {
-    const user = await User.findById(id);
-    if (category.includes(user.category)) {
-      return res.status(200).json({
-        isSuccess: true,
-        data: {
-          name: user.name,
-          email: user.email,
-          category: user.category,
-        },
-        statusCode: 200,
-      });
-    }
-    if (category.includes(!user.category)) {
-      return res.status(403).json({
-        isSuccess: false,
-        message: "Invalid user category",
-        statusCode: 403,
-      });
-    }
+    const user = await User.findById(req.user.id).select(
+      "name email category isAdmin",
+    );
+    return res.status(200).json({ isSuccess: true, data: user });
   } catch (error) {
     console.error(error);
+    return res.status(500).json({
+      isSuccess: false,
+      message: "Something went wrong",
+      statusCode: 500,
+    });
   }
 };
+
+export const updateProfile = async (req, res) => {
+  const category = req.user.category;
+  if (!category) {
+    return (
+      res.status(401),
+      josn({
+        isSuccess: false,
+        message: "Unauthorized User",
+        statusCode: 401,
+      })
+    );
+  }
+  if (category === "Student") {
+    const userId = req.user.id;
+    const { phone, rollNo, department, courses, semester } = req.body;
+
+    const validateData = validateStudentProfileFields(
+      phone,
+      rollNo,
+      department,
+      courses,
+      semester,
+    );
+    if (validateData.isSuccess === false) {
+      return res.status(validateData.statusCode).json({
+        isSuccess: false,
+        message: validateData.message,
+      });
+    }
+
+    const student = await Student.findOneAndUpdate(
+      { user: userId },
+      {
+        user: userId,
+        phone: validateData.phone,
+        rollNo: validateData.rollNo,
+        department: validateData.department,
+        courses: validateData.courses,
+        semester: validateData.semester,
+      },
+      {
+        new: true,
+        upsert: true,
+        runValidators: true,
+      },
+    );
+
+    return res.status(200).json({
+      isSuccess: true,
+      data: student,
+      statusCode: 200,
+    });
+  }
+
+  if (category === "Organiser") {
+    const user = req.user.id;
+    const { phone, teacherId, department } = req.body;
+
+    const validateData = validateTeacherProfileFields(
+      phone,
+      teacherId,
+      department,
+    );
+    if (!validateData) {
+      return res.status(404).json({
+        isSuccess: false,
+        message: "Invalid data fields",
+        statusCode: 404,
+      });
+    }
+
+    const teacher = await Teacher.create({
+      user: user,
+      phone: validateData.phone,
+      rollNo: validateData.rollNo,
+      department: validateData.department,
+      courses: validateData.courses,
+      semester: validateData.semester,
+    });
+
+    return res.status(200).json({
+      isSuccess: true,
+      data: teacher,
+      statusCode: 200,
+    });
+  }
+};
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({
+      category: { $in: ["Student", "Organiser"] },
+    }).select("name email category");
+    if (users.length === 0) {
+      return res.status(404).json({
+        isSuccess: false,
+        message: "No user found",
+        statusCode: 404,
+      });
+    }
+    return res.status(200).json({
+      isSuccess: true,
+      data: users,
+      statusCode: 200,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      isSuccess: false,
+      message: "Something went wrong",
+      statusCode: 500,
+    });
+  }
+};
+
+export const deleteUser = async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const validateId = await User.findById({ _id: id });
+    if (!validateId) {
+      return res.status(404).json({
+        isSuccess: false,
+        message: "Invalid Id",
+        statusCode: 404,
+      });
+    }
+    const user = await User.findByIdAndDelete({
+      _id: id,
+      category: { $in: ["Student", "Organiser"] },
+    });
+    if (!user) {
+      return res.status(404).json({
+        isSuccess: false,
+        message: "User does not found or cannot be deleted",
+        statusCode: 404,
+      });
+    }
+    return res.status(200).json({
+      isSuccess: true,
+      message: "User deleted Successfully",
+      statusCode: 200,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      isSuccess: false,
+      message: "Something went wrong",
+      statusCode: 500,
+    });
+  }
+};
+
+export const createEvent = async (req, res) => {};

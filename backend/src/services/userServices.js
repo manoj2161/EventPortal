@@ -1,6 +1,7 @@
 import { User } from "../models/userModel.js";
 import { createHash } from "crypto";
 import bcrypt from "bcrypt";
+import { departments, course } from "../utils/departments.js";
 export const validateFields = async (name, email, password, category) => {
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}$/;
@@ -186,4 +187,107 @@ export const hashRefreshToken = (token, refreshToken) => {
     .update(refreshToken)
     .digest("hex");
   return { hashedRefreshToken, hashedToken };
+};
+export const validateStudentProfileFields = (
+  phone,
+  rollNo,
+  department,
+  courses,
+  semester,
+) => {
+  const phoneRegex = /^[6-9]\d{9}$/;
+  const currentYear = new Date().getFullYear() % 100;
+  const earliestYear = currentYear - 4;
+  const rollNoRegex = /^H\d{6}$/;
+  if (!phone || !rollNo || !department || !courses || !semester) {
+    return {
+      isSuccess: false,
+      message: "Invalid data fields",
+      statusCode: 400,
+    };
+  }
+  if (!phoneRegex.test(phone)) {
+    return {
+      isSuccess: false,
+      message: "Invalid Phone number",
+      statusCode: 400,
+    };
+  }
+  if (
+    !rollNoRegex.test(rollNo) ||
+    Number(rollNo.slice(1, 3)) < earliestYear ||
+    Number(rollNo.slice(1, 3)) > currentYear
+  ) {
+    return {
+      isSuccess: false,
+      message: "Invalid roll number",
+      statusCode: 400,
+    };
+  }
+  if (!departments.includes(department)) {
+    return {
+      isSuccess: false,
+      message: "Invalid department",
+      statusCode: 400,
+    };
+  }
+
+  if (!course.includes(courses)) {
+    return {
+      isSuccess: false,
+      message: "Invalid Course",
+      statusCode: 400,
+    };
+  }
+  if (semester > 12 || semester < 1) {
+    return {
+      isSuccess: false,
+      message: "Invalid semester",
+      statusCode: 400,
+    };
+  }
+
+  return {
+    phone,
+    rollNo,
+    department,
+    courses,
+    semester,
+  };
+};
+export const validateTeacherProfileFields = (phone, teacherId, department) => {
+  const phoneRegex = /^[6-9]\d{9}$/;
+  if (!phone || !teacherId || !department) {
+    return {
+      isSuccess: false,
+      message: "Invalid data fields",
+      statusCode: 400,
+    };
+  }
+  if (!phoneRegex.test(phone)) {
+    return {
+      isSuccess: false,
+      message: "Invalid Phone number",
+      statusCode: 400,
+    };
+  }
+  if (!departments.includes(department)) {
+    return {
+      isSuccess: false,
+      message: "Invalid department",
+      statusCode: 400,
+    };
+  }
+  if (!teacherId) {
+    return {
+      isSuccess: false,
+      message: "Invalid teacher id",
+      statusCode: 400,
+    };
+  }
+  return {
+    phone,
+    teacherId,
+    department,
+  };
 };

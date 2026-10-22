@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true,
-    enum: ["Student", "Organiser"],
+    enum: ["Admin", "Student", "Organiser"],
   },
   isVerified: {
     type: Boolean,
