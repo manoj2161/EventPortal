@@ -108,3 +108,18 @@ export const course = [
   "LLB",
   "BA + LLB Integrated",
 ];
+
+export const eventLocations = [
+  "University Auditorium",
+  "Multipurpose Auditorium",
+  "Open-Air Theatre",
+  "Seminar Hall",
+  "Conference Hall",
+  "University Ground",
+  "Cricket Ground",
+  "Basketball Court",
+  "Volleyball Court",
+  "School of Engineering & Technology",
+  "School of Basic & Applied Sciences",
+  "School of Computer Application",
+];

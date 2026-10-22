@@ -1,7 +1,7 @@
 import { User } from "../models/userModel.js";
 import { createHash } from "crypto";
 import bcrypt from "bcrypt";
-import { departments, course } from "../utils/departments.js";
+import { departments, course, eventLocations } from "../utils/departments.js";
 export const validateFields = async (name, email, password, category) => {
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}$/;
@@ -289,5 +289,80 @@ export const validateTeacherProfileFields = (phone, teacherId, department) => {
     phone,
     teacherId,
     department,
+  };
+};
+export const validateEventsFields = (
+  organiser,
+  name,
+  eventDate,
+  eventTime,
+  eventLocation,
+  totalSeats,
+  departmentsSelected,
+) => {
+  if (!organiser) {
+    return {
+      isSuccess: false,
+      message: "Only organisers can create events",
+      statusCode: 400,
+    };
+  }
+  if (
+    !name ||
+    !eventDate ||
+    !eventTime ||
+    !eventLocation ||
+    totalSeats === undefined ||
+    totalSeats === null ||
+    !Array.isArray(departmentsSelected)
+  ) {
+    return {
+      isSuccess: false,
+      message: "Invalid data fields",
+      statusCode: 400,
+    };
+  }
+  if (typeof name !== "string" || !name.trim()) {
+    return {
+      isSuccess: false,
+      message: "Invalid event name",
+      statusCode: 400,
+    };
+  }
+  if (!eventLocations.includes(eventLocation)) {
+    return {
+      isSuccess: false,
+      message: "Invalid Event location",
+      statusCode: 400,
+    };
+  }
+  if (
+    departmentsSelected.length === 0 ||
+    !departmentsSelected.every((item) => departments.includes(item))
+  ) {
+    return {
+      isSuccess: false,
+      message: "Select atleast one valid department",
+      statusCode: 400,
+    };
+  }
+  const seats = Number(totalSeats);
+  if (seats > 1000 || seats < 2) {
+    return {
+      isSuccess: false,
+      message: "Invalid seats",
+      statusCode: 400,
+    };
+  }
+  return {
+    isSuccess: true,
+    data: {
+      name: name.trim(),
+      eventDate,
+      eventTime,
+      eventLocation,
+      totalSeats: seats,
+      departments: [...new Set(departmentsSelected)],
+    },
   };
 };

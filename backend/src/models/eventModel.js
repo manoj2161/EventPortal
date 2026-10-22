@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
-import { departments } from "../utils/departments.js";
+import { departments, eventLocations } from "../utils/departments.js";
 
 const eventSchema = mongoose.Schema(
   {
     organiser: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Users",
+      ref: "User",
       required: true,
     },
     name: {
@@ -27,21 +27,24 @@ const eventSchema = mongoose.Schema(
 
     eventLocation: {
       type: String,
+      enum: eventLocations,
       required: true,
       trim: true,
     },
     totalSeats: {
       type: Number,
       required: true,
-      trim: true,
       min: 2,
       max: 1000,
     },
-    department: {
-      type: String,
-      enum: departments,
+    departments: {
+      type: [
+        {
+          type: String,
+          enum: departments,
+        },
+      ],
       required: true,
-      trim: true,
     },
   },
   {

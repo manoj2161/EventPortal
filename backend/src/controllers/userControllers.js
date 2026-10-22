@@ -4,6 +4,7 @@ import {
   hashRefreshToken,
   validateStudentProfileFields,
   validateTeacherProfileFields,
+  validateEventsFields,
 } from "../services/userServices.js";
 import "dotenv/config";
 import jwt from "jsonwebtoken";
@@ -11,6 +12,7 @@ import { User } from "../models/userModel.js";
 import { verifyEmail } from "../services/emailServices.js";
 import { Student } from "../models/studentProfileModel.js";
 import { Teacher } from "../models/teacherProfileModel.js";
+import { Events } from "../models/eventModel.js";
 export const createUser = async (req, res) => {
   const { name, email, password, category } = req.body;
   try {
@@ -236,7 +238,7 @@ export const updateProfile = async (req, res) => {
   if (!category) {
     return (
       res.status(401),
-      josn({
+      json({
         isSuccess: false,
         message: "Unauthorized User",
         statusCode: 401,
@@ -383,4 +385,54 @@ export const deleteUser = async (req, res) => {
   }
 };
 
-export const createEvent = async (req, res) => {};
+export const createEvent = async (req, res) => {
+  const { name, eventDate, eventTime, eventLocation, totalSeats, departments } =
+    req.body;
+  const organiser = req.user.id;
+  const validateFields = validateEventsFields(
+    organiser,
+    name,
+    eventDate,
+    eventTime,
+    eventLocation,
+    totalSeats,
+    departments,
+  );
+  try {
+    if (validateFields.isSuccess === false) {
+      return res.status(Number(validateFields.statusCode)).json({
+        isSuccess: false,
+        message: validateFields.message,
+        statusCode: validateFields.statusCode,
+      });
+    }
+    const newEvent = await Events.create({
+      organiser,
+      name: validateFields.data.name,
+      eventDate: validateFields.data.eventDate,
+      eventTime: validateFields.data.eventTime,
+      eventLocation: validateFields.data.eventLocation,
+      totalSeats: validateFields.data.totalSeats,
+      departments: validateFields.data.departments,
+    });
+    return res.status(201).json({
+      isSuccess: true,
+      data: newEvent,
+      statusCode: 201,
+    });
+  } catch (error) {
+    console.error("Error creating event:", error);
+    if (error.code === 11000) {
+      return res.status(409).json({
+        isSuccess: false,
+        message: "An event with this name already exists",
+        statusCode: 409,
+      });
+    }
+    return res.status(500).json({
+      isSuccess: false,
+      message: "Something went wrong",
+      statusCode: 500,
+    });
+  }
+};

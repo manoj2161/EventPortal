@@ -25,7 +25,7 @@ export const verifyTokenAuth = async (req, res, next) => {
       });
     }
     req.user = {
-      id: user.id,
+      id: user._id,
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,

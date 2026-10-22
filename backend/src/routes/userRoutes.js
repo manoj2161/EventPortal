@@ -17,7 +17,7 @@ router.post("/signup", createUser);
 router.post("/signin", loginUser);
 router.get("/verify-email", confirmEmail);
 router.get("/profile", verifyTokenAuth, getProfile);
-router.get("/profile/dashboard", verifyTokenAuth, getEvents);
+// router.get("/profile/dashboard", verifyTokenAuth, getEvents);
 router.put("/profile/update-profile", verifyTokenAuth, updateProfile);
 router.get("/admin/users", verifyTokenAuth, verifyAdmin, getAllUsers);
 router.delete(
