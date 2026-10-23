@@ -123,3 +123,4 @@ export const eventLocations = [
   "School of Basic & Applied Sciences",
   "School of Computer Application",
 ];
+export const eventStatuses = ["Approved","Rejected"] 

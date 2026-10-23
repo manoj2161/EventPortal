@@ -436,3 +436,96 @@ export const createEvent = async (req, res) => {
     });
   }
 };
+export const getEvents = async (req, res) => {
+  try {
+    const allEvents = await Events.find();
+    if (allEvents.length === 0) {
+      return res.status(404).json({
+        isSuccess: false,
+        message: "Tehere is no events",
+      });
+    }
+    return res.status(200).json({
+      isSuccess: true,
+      data: allEvents,
+      statusCode: 200,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      isSuccess: false,
+      message: "Something went wrong",
+      statusCode: 500,
+    });
+  }
+};
+export const eventStatus = async (req, res) => {
+  const id = req.params.id;
+  const status = req.query.status;
+  console.log(eventStatus);
+  try {
+    const findEvent = await Events.findByIdAndUpdate(
+      id,
+      {
+        status,
+        isApproved: true,
+      },
+      { new: true },
+    );
+    if (!findEvent) {
+      return res.status(404).json({
+        isSuccess: false,
+        message: "Event not found",
+        statusCode: 404,
+      });
+    }
+    return res.status(200).json({
+      isSuccess: true,
+      data: `Event status updated successfully to ${status}`,
+      statusCode: 200,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      isSuccess: false,
+      message: "Something went wrong",
+      statusCode: 500,
+    });
+  }
+};
+export const logoutUser = async (req, res) => {
+  try {
+    const id = req.user.id;
+    const user = await User.findByIdAndUpdate(
+      id,
+      {
+        $unset: { authToken: 1, refreshTokenHash: 1 },
+      },
+      { new: false },
+    );
+    if (!user) {
+      res.clearCookie("authToken");
+      res.clearCookie("refreshToken");
+      return res.status(404).json({
+        isSuccess: true,
+        message: "User not found",
+        statusCode: 404,
+      });
+    }
+    res.clearCookie("authToken");
+    res.clearCookie("refreshToken");
+    return res.status(200).json({
+      isSuccess: true,
+      message: "Logged out successfully",
+      statusCode: 200,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      isSuccess: false,
+      message: "Something went wrong",
+      statusCode: 500,
+    });
+  }
+};

@@ -46,6 +46,14 @@ const eventSchema = mongoose.Schema(
       ],
       required: true,
     },
+    status: {
+      type: String,
+      default: "Pending",
+    },
+    isApproved: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
