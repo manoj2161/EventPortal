@@ -65,7 +65,7 @@ export const Login = () => {
             <img src={loginimg} />
           </div>
         </div>
-        <div className="h-screen w-[40%] h-full flex flex-col justify-center gap-8 pl-[10%]">
+        <div className="h-screen w-[40%] h-full flex flex-col justify-center gap-2 pl-[10%]">
           <h1 className="text-5xl ml-8 mt-2 font-bold">Login</h1>
           <p className="ml-8 mt-2">
             Don't have an account?
@@ -104,7 +104,7 @@ export const Login = () => {
                   setShow((prev) => !prev);
                 }}
                 className={clsx(
-                  "absolute bottom-9 right-1 text-gray-400 size-5",
+                  "absolute bottom-9 right-2 text-gray-400 size-5",
                   show ? "block" : "hidden",
                 )}
               />
@@ -113,7 +113,7 @@ export const Login = () => {
                   setShow((prev) => !prev);
                 }}
                 className={clsx(
-                  "absolute bottom-9 right-1 text-gray-400 size-5",
+                  "absolute bottom-9 right-2 text-gray-400 size-5",
                   show ? "hidden" : "block",
                 )}
               />
