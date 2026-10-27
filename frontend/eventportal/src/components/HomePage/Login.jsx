@@ -23,15 +23,10 @@ export const Login = () => {
             <img className="size-18 ml-14 mt-2" src={graduationHat} alt="" />
             <b className="text-3xl ">Campulsy</b>
           </div>
-          <div className="flex flex-col ml-32 gap-4">
-            <h1 className="text-5xl font-bold">Welcome Back!</h1>
-            <p className="text-gray-400">
-              Log in to your account and continue your <br /> campus journey.
-            </p>
-
-            <div className="flex flex-col gap-6">
-              <div className="flex items-center gap-2">
-                <Calendar className="size-10 bg-yellow-300 p-2 rounded-full border border-gray-200" />
+          <div className="flex justify-center ml-32 gap-4 ">
+            <div className="flex flex-col gap-6 text-2xl">
+              <div className="flex items-center  gap-2">
+                <Calendar className="size-12 bg-yellow-300 p-2 rounded-full border border-gray-200" />
                 <p className="text-gray-500 font-semibold">
                   <span className="text-black font-bold text-xl">
                     Discover Events
@@ -41,7 +36,7 @@ export const Login = () => {
                 </p>
               </div>
               <div className="flex items-center gap-2">
-                <FileText className="size-10 bg-yellow-300 p-2 rounded-full border border-gray-200" />
+                <FileText className="size-12 bg-yellow-300 p-2 rounded-full border border-gray-200" />
                 <p className="text-gray-500 font-semibold">
                   <span className="text-black font-bold text-xl">
                     Manage Registrations
@@ -51,7 +46,7 @@ export const Login = () => {
                 </p>
               </div>
               <div className="flex items-center gap-2">
-                <UserGroup className="size-10 bg-yellow-300 p-2 rounded-full border border-gray-200" />
+                <UserGroup className="size-12 bg-yellow-300 p-2 rounded-full border border-gray-200" />
                 <p className="text-gray-500 font-semibold">
                   <span className="text-black font-bold text-xl">
                     Connect & Grow
@@ -66,16 +61,12 @@ export const Login = () => {
           </div>
         </div>
         <div className="h-screen w-[40%] h-full flex flex-col justify-center gap-2 pl-[10%]">
-          <h1 className="text-5xl ml-8 mt-2 font-bold">Login</h1>
-          <p className="ml-8 mt-2">
-            Don't have an account?
-            <Link
-              to="/signup"
-              className="text-yellow-500 font-semibold border-b-2 "
-            >{" "}Sign up
-            </Link>
-          </p>
-
+          <div className="ml-8">
+            <h1 className="text-5xl font-bold">Welcome Back!</h1>
+            <p className="text-gray-400">
+              Log in to your account and continue your <br /> campus journey.
+            </p>
+          </div>
           <form action="" className="ml-8 mt-8">
             <div className="w-88 h-24  relative flex flex-col">
               <label htmlFor="email" className="text-lg font-semibold">
@@ -134,6 +125,16 @@ export const Login = () => {
               />{" "}
               <ArrowRight className="size-5 mt-1 ml-2" />
             </div>
+            <p className="ml-8 mt-5">
+              Don't have an account?
+              <Link
+                to="/signup"
+                className="text-yellow-500 font-semibold border-b-2"
+              >
+                {" "}
+                Sign up
+              </Link>
+            </p>
           </form>
         </div>
       </section>
