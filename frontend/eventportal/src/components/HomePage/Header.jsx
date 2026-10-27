@@ -1,5 +1,6 @@
 import { Bell, CircleUser, ChevronDown, Search } from "lucide-react";
 import graduationHat from "../../assets/graduation-hat.png";
+import { Link } from "react-router-dom";
 export const Header = () => {
   return (
     <>
@@ -12,12 +13,12 @@ export const Header = () => {
         </div>
         <div>
           <nav className="flex gap-8 text-sm text-gray-800 font-semibold">
-            <a href="" className="border-b-2 border-b-yellow-400">
+            <Link className="border-b-2 border-b-yellow-400" to="/">
               Home
-            </a>
-            <a href="">Events</a>
-            <a href="">My Registrations</a>
-            <a href="">Login</a>
+            </Link>
+            <Link to="/login">Events</Link>
+            <Link to="/login">My Registrations</Link>
+            <Link to="/login">Login</Link>
           </nav>
         </div>
         <div className="w-108 flex justify-between items-center">
