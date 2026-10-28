@@ -1,6 +1,6 @@
 import { UpcomingEventsCard } from "./UpcomingEventsCard";
 
-export const UpcomingEvents = () => {
+export const UpcomingEvents = ({ setVisible }) => {
   const categories = [
     "All",
     "Tech",
@@ -11,9 +11,9 @@ export const UpcomingEvents = () => {
   ];
   return (
     <>
-      <div className="mt-4 mx-2 rounded-md mb-8 h-88">
-        <h1 className="ml-2 mt-2 font-bold">Upcoming Event</h1>
-        <section className="mx-2 mt-2 rounded-md  flex items-center gap-2">
+      <div className="mt-4 mx-15 rounded-md mb-8 h-88">
+        <h1 className="mt-8 font-bold text-4xl ">Upcoming Event</h1>
+        <section className=" mt-2 rounded-md  flex items-center gap-2">
           <div className="m-2 flex gap-2">
             {categories.map((category) => {
               return (
@@ -24,8 +24,8 @@ export const UpcomingEvents = () => {
             })}
           </div>
         </section>
-        <div className="mx-2 my-2">
-          <UpcomingEventsCard />
+        <div className=" my-2">
+          <UpcomingEventsCard setVisible={setVisible} />
         </div>
       </div>
     </>

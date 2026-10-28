@@ -3,13 +3,13 @@ import loginimg from "../../assets/loginimg.png";
 import { Link } from "react-router-dom";
 import {
   ArrowRight,
-  Calendar,
   Eye,
   EyeClosed,
   FileText,
   UserGroup,
   Lock,
   Mail,
+  CalendarDays,
 } from "lucide-react";
 import { useState } from "react";
 import clsx from "clsx";
@@ -19,39 +19,36 @@ export const Login = () => {
     <>
       <section className="flex justify-center">
         <div className="h-screen w-[60%] flex flex-col justify-between bg-orange-50">
-          <div className="flex justify-center items-center gap-4 text-2xl">
-            <img className="size-18 ml-14 mt-2" src={graduationHat} alt="" />
-            <b className="text-3xl ">Campulsy</b>
-          </div>
-          <div className="flex justify-center ml-32 gap-4 ">
-            <div className="flex flex-col gap-6 text-2xl">
-              <div className="flex items-center  gap-2">
-                <Calendar className="size-12 bg-yellow-300 p-2 rounded-full border border-gray-200" />
+          <div className="flex justify-center ml-32 gap-4 mt-32">
+              <div className="flex gap-6 text-xl">
+              <div className="flex flex-col gap-3 bg-white  rounded-4xl  w-68 p-3">
+                <CalendarDays className="size-12 bg-yellow-300 p-2 rounded-full border border-gray-200" />
                 <p className="text-gray-500 font-semibold">
-                  <span className="text-black font-bold text-xl">
+                  <span className="text-black font-bold text-2xl">
                     Discover Events
                   </span>
                   <br />
                   Find the best events on campus
                 </p>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-col gap-3 bg-white rounded-4xl bg-orange-100 w-68 p-3">
                 <FileText className="size-12 bg-yellow-300 p-2 rounded-full border border-gray-200" />
                 <p className="text-gray-500 font-semibold">
-                  <span className="text-black font-bold text-xl">
+                  <span className="text-black font-bold text-2xl">
                     Manage Registrations
                   </span>
                   <br />
                   Keep track of your events
                 </p>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-col gap-3 bg-white  rounded-4xl bg-orange-100 w-68 p-3">
                 <UserGroup className="size-12 bg-yellow-300 p-2 rounded-full border border-gray-200" />
                 <p className="text-gray-500 font-semibold">
-                  <span className="text-black font-bold text-xl">
+                  <span className="text-black font-bold text-2xl">
                     Connect & Grow
-                  </span>{" "}
-                  <br /> Be a part of the community
+                  </span>
+                  <br />
+                  Be a part of the community
                 </p>
               </div>
             </div>
@@ -61,8 +58,12 @@ export const Login = () => {
           </div>
         </div>
         <div className="h-screen w-[40%] h-full flex flex-col justify-center gap-2 pl-[10%]">
+          <div className="flex items-center ml-18 gap-4 text-2xl mb-8">
+            <img className="size-18" src={graduationHat} alt="" />
+            <b className="text-4xl">CAMPUSLY</b>
+          </div>
           <div className="ml-8">
-            <h1 className="text-5xl font-bold">Welcome Back!</h1>
+            <h1 className="text-4xl font-bold">Welcome Back!</h1>
             <p className="text-gray-400">
               Log in to your account and continue your <br /> campus journey.
             </p>

@@ -1,31 +1,39 @@
 import { Bell, CircleUser, ChevronDown, Search } from "lucide-react";
 import graduationHat from "../../assets/graduation-hat.png";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 export const Header = () => {
+  const [isLogin, setIsLogin] = useState(true);
   return (
     <>
-      <header className="h-14 shadow rounded flex justify-evenly gap-102 items-center">
+      <header className="h-18 shadow rounded flex justify-between items-center">
         <div className="flex jusitfy-between items-center gap-18">
-          <div className="flex justify-center items-center gap-4 text-2xl">
+          <div className="flex justify-center items-center gap-4 text-3xl">
             <img className="size-12 ml-14 mt-2" src={graduationHat} alt="" />
             <b>Campulsy</b>
           </div>
         </div>
         <div>
-          <nav className="flex gap-8 text-sm text-gray-800 font-semibold">
+          <nav className="flex gap-6 text-gray-800 font-semibold">
             <Link className="border-b-2 border-b-yellow-400" to="/">
               Home
             </Link>
             <Link to="/login">Events</Link>
             <Link to="/login">My Registrations</Link>
-            <Link to="/login">Login</Link>
+            {isLogin ? (
+              <Link to="/profile">Profile</Link>
+            ) : (
+              <Link to="/login">Login</Link>
+            )}
+
+            {isLogin && <Link to="/">Logout</Link>}
           </nav>
         </div>
-        <div className="w-108 flex justify-between items-center">
+        <div className="flex justify-between items-center gap-2">
           <div className="relative">
-            <Search className="absolute size-4 mt-2 text-gray-500 ml-2" />
+            <Search className="absolute size-4 mt-3 text-gray-500 ml-2" />
             <input
-              className="border outline-none border-gray-200 rounded-full text-gray-700 w-68 text-xs p-1.5 pl-6 bg-gray-100"
+              className="border outline-none border-gray-200 rounded-full text-gray-700 w-68 h-10 text-xs p-1.5 pl-8 bg-gray-100"
               type="search"
               name=""
               id=""
@@ -36,9 +44,17 @@ export const Header = () => {
             <div>
               <Bell className="size-5" />
             </div>
-            <div className="flex items-center gap-1 mr-6">
-              <CircleUser className="size-5" />
-              <ChevronDown className="size-4" />
+            <div className="flex items-center gap-4 mr-6 w-48">
+              <div>
+                <CircleUser className="size-7" />
+              </div>
+              <div>
+                <p>Manoj Kumar</p>
+                <p className="text-sm text-gray-500">Student</p>
+              </div>
+              <div>
+                <ChevronDown className="size-4" />
+              </div>
             </div>
           </div>
         </div>

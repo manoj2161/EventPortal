@@ -3,7 +3,6 @@ import loginimg from "../../assets/loginimg.png";
 import { Link } from "react-router-dom";
 import {
   ArrowRight,
-  Calendar,
   Eye,
   EyeClosed,
   FileText,
@@ -11,7 +10,7 @@ import {
   Lock,
   Mail,
   User,
-  GraduationCap,
+  CalendarDays,
 } from "lucide-react";
 import { useState } from "react";
 import clsx from "clsx";
@@ -21,44 +20,36 @@ export const Signup = () => {
     <>
       <section className="flex justify-center">
         <div className="h-screen w-[60%] flex flex-col justify-between bg-orange-50">
-          <div className="flex justify-center items-center gap-4 text-2xl">
-            <img className="size-18 ml-14 mt-2" src={graduationHat} alt="" />
-            <b className="text-3xl ">Campulsy</b>
-          </div>
-          <div className="flex flex-col ml-32 gap-4">
-            <h1 className="text-5xl font-bold">Create your Account</h1>
-            <p className="text-gray-400">
-              Join Campusly and never miss out on <br /> your favourite events.
-            </p>
-
-            <div className="flex flex-col gap-6">
-              <div className="flex items-center gap-2">
-                <Calendar className="size-10 bg-yellow-300 p-2 rounded-full border border-gray-200" />
+          <div className="flex justify-center ml-32 gap-4 mt-32">
+            <div className="flex gap-6 text-xl">
+              <div className="flex flex-col gap-3 bg-white  rounded-4xl  w-68 p-3">
+                <CalendarDays className="size-12 bg-yellow-300 p-2 rounded-full border border-gray-200" />
                 <p className="text-gray-500 font-semibold">
-                  <span className="text-black font-bold text-xl">
+                  <span className="text-black font-bold text-2xl">
                     Discover Events
                   </span>
                   <br />
                   Find the best events on campus
                 </p>
               </div>
-              <div className="flex items-center gap-2">
-                <FileText className="size-10 bg-yellow-300 p-2 rounded-full border border-gray-200" />
+              <div className="flex flex-col gap-3 bg-white rounded-4xl bg-orange-100 w-68 p-3">
+                <FileText className="size-13 bg-yellow-300 p-2 rounded-full border border-gray-200" />
                 <p className="text-gray-500 font-semibold">
-                  <span className="text-black font-bold text-xl">
+                  <span className="text-black font-bold text-2xl">
                     Manage Registrations
                   </span>
                   <br />
                   Keep track of your events
                 </p>
               </div>
-              <div className="flex items-center gap-2">
-                <UserGroup className="size-10 bg-yellow-300 p-2 rounded-full border border-gray-200" />
+              <div className="flex flex-col gap-3 bg-white  rounded-4xl bg-orange-100 w-68 p-3">
+                <UserGroup className="size-13 bg-yellow-300 p-2 rounded-full border border-gray-200" />
                 <p className="text-gray-500 font-semibold">
-                  <span className="text-black font-bold text-xl">
+                  <span className="text-black font-bold text-2xl">
                     Connect & Grow
-                  </span>{" "}
-                  <br /> Be a part of the community
+                  </span>
+                  <br />
+                  Be a part of the community
                 </p>
               </div>
             </div>
@@ -68,19 +59,20 @@ export const Signup = () => {
           </div>
         </div>
         <div className="h-screen w-[40%] h-full flex flex-col justify-center gap-8 pl-[10%]">
-          <h1 className="text-5xl ml-8 mt-2 font-bold">Signup</h1>
-          <p className="ml-8 mt-2">
-            Already have an account?
-            <Link
-              to="/login"
-              className="text-yellow-500 font-semibold border-b-2 "
-            >
-              {" "}
-              Login
-            </Link>
-          </p>
+          <div className="flex ml-18 items-center gap-4 text-2xl">
+            <img className="size-18" src={graduationHat} alt="" />
+            <b className="text-3xl">Campulsy</b>
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold ml-8">
+              Create your <br /> Account
+            </h1>
+            <p className="text-gray-400 ml-8">
+              Join Campusly and never miss out on <br /> your favourite events.
+            </p>
+          </div>
 
-          <form action="" className="ml-8 mt-8">
+          <form action="" className="ml-8">
             <div className="w-88 h-24  relative flex flex-col">
               <label htmlFor="name" className="text-lg font-semibold">
                 Full Name
@@ -138,22 +130,20 @@ export const Signup = () => {
             <div className="w-88 flex flex-col justify-between">
               <label
                 htmlFor="registerationType"
-                className="text-lg font-bold py-2"
+                className="text-lg font-bold py-1"
               >
                 Registration Type
               </label>
               <div className="flex justify-between ">
                 <div className="relative flex">
-                  <button className="w-38 border border-yellow-500 border-2 px-6 py-2 rounded-xl bg-yellow-100">
+                  <button className="w-42 border border-yellow-500 border-2 px-6 py-2 rounded-xl bg-yellow-100">
                     Student
                   </button>
-                  <GraduationCap className="absolute top-3 left-2" />
                 </div>
                 <div className="relative">
-                  <button className="w-38 border border-gray-400 border-2 px-6 py-2 rounded-xl ">
+                  <button className="w-42 border border-gray-400 border-2 px-6 py-2 rounded-xl ">
                     Organiser
                   </button>
-                  <User className="absolute top-3 left-2" />
                 </div>
               </div>
             </div>
@@ -165,6 +155,16 @@ export const Signup = () => {
               />{" "}
               <ArrowRight className="size-5 mt-1 ml-2" />
             </div>
+            <p className="ml-8">
+              Already have an account?
+              <Link
+                to="/login"
+                className="text-yellow-500 font-semibold border-b-2 "
+              >
+                {" "}
+                Login
+              </Link>
+            </p>
           </form>
         </div>
       </section>
