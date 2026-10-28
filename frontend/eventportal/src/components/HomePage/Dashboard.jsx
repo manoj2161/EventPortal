@@ -11,9 +11,10 @@ export const Dashboard = () => {
       <div className="relative">
         <Header />
         <Welcome />
+
         <UpcomingEvents setVisible={setVisible} />
         <div className="absolute z-100 top-0">
-            <EventRegisterModal visible={visible} setVisible={setVisible} />
+          <EventRegisterModal visible={visible} setVisible={setVisible} />
         </div>
       </div>
     </>
