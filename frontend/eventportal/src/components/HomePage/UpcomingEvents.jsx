@@ -1,6 +1,6 @@
 import { UpcomingEventsCard } from "./UpcomingEventsCard";
 
-export const UpcomingEvents = ({ setVisible }) => {
+export const UpcomingEvents = ({ setVisible, isOrganiser }) => {
   const categories = [
     "All",
     "Tech",
@@ -25,7 +25,10 @@ export const UpcomingEvents = ({ setVisible }) => {
           </div>
         </section>
         <div className=" my-2">
-          <UpcomingEventsCard setVisible={setVisible} />
+          <UpcomingEventsCard
+            setVisible={setVisible}
+            isOrganiser={isOrganiser}
+          />
         </div>
       </div>
     </>

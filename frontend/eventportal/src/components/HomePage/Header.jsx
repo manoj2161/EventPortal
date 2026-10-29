@@ -2,8 +2,9 @@ import { Bell, CircleUser, ChevronDown, Search } from "lucide-react";
 import graduationHat from "../../assets/graduation-hat.png";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-export const Header = () => {
+export const Header = ({ isOrganiser, setVisible }) => {
   const [isLogin, setIsLogin] = useState(true);
+
   return (
     <>
       <header className="h-18 shadow rounded flex justify-between items-center">
@@ -18,8 +19,18 @@ export const Header = () => {
             <Link className="border-b-2 border-b-yellow-400" to="/">
               Home
             </Link>
-            <Link to="/login">Events</Link>
-            <Link to="/login">My Registrations</Link>
+            {isOrganiser ? (
+              <button onClick={() => setVisible((prev) => !prev)}>
+                <Link>Create Event</Link>
+              </button>
+            ) : (
+              <Link to="/login">Events</Link>
+            )}
+            {isOrganiser ? (
+              <Link>My Events</Link>
+            ) : (
+              <Link to="/login">My Registrations</Link>
+            )}
             {isLogin ? (
               <Link to="/profile">Profile</Link>
             ) : (
@@ -50,7 +61,9 @@ export const Header = () => {
               </div>
               <div>
                 <p>Manoj Kumar</p>
-                <p className="text-sm text-gray-500">Student</p>
+                <p className="text-sm text-gray-500">
+                  {isOrganiser ? "Organiser" : "Student"}
+                </p>
               </div>
               <div>
                 <ChevronDown className="size-4" />

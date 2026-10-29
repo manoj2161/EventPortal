@@ -6,17 +6,17 @@ import { Welcome } from "./Welcome";
 
 export const Dashboard = () => {
   const [visible, setVisible] = useState(false);
+  const [isOrganiser, setIsOrganiser] = useState(true);
   return (
     <>
-      <div className="relative">
-        <Header />
-        <Welcome />
-
-        <UpcomingEvents setVisible={setVisible} />
-        <div className="absolute z-100 top-0">
-          <EventRegisterModal visible={visible} setVisible={setVisible} />
-        </div>
-      </div>
+      <Header isOrganiser={isOrganiser} setVisible={setVisible} />
+      <Welcome />
+      <UpcomingEvents setVisible={setVisible} isOrganiser={isOrganiser} />
+      <EventRegisterModal
+        visible={visible}
+        setVisible={setVisible}
+        isOrganiser={isOrganiser}
+      />
     </>
   );
 };

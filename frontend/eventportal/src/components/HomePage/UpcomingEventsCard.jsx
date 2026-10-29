@@ -10,7 +10,7 @@ import campus from "../../assets/campus.png";
 import football from "../../assets/football.png";
 import graphic from "../../assets/graphic.png";
 import publicSpeaking from "../../assets/public.png";
-export const UpcomingEventsCard = ({ setVisible }) => {
+export const UpcomingEventsCard = ({ setVisible, isOrganiser }) => {
   const upcomingEvents = [
     {
       name: "Web Development Workshop",
@@ -94,12 +94,14 @@ export const UpcomingEventsCard = ({ setVisible }) => {
                   <p className="flex items-center mt-2">
                     <User2 className="size-4 mr-2" />
                     {event.bookedSeats}/{event.totalSeats}
-                    <button
-                      onClick={() => setVisible((prev) => !prev)}
-                      className="w-6 h-6 bg-yellow-400 right-4 absolute rounded-full"
-                    >
-                      <ArrowRight className="absolute right-1 bottom-1 size-4" />
-                    </button>
+                    {!isOrganiser && (
+                      <button
+                        onClick={() => setVisible((prev) => !prev)}
+                        className="w-6 h-6 bg-yellow-400 right-4 absolute rounded-full"
+                      >
+                        <ArrowRight className="absolute right-1 bottom-1 size-4" />
+                      </button>
+                    )}
                   </p>
                 </div>
               </div>

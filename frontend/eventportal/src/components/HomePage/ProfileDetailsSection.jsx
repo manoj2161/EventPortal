@@ -1,6 +1,6 @@
 import { Landmark, Mail, PenIcon, Phone } from "lucide-react";
 import profile from "../../assets/profile.jpg";
-export const ProfileDetailsSection = () => {
+export const ProfileDetailsSection = ({ setVisible, isOrganiser }) => {
   return (
     <>
       <section className="rounded-lg shadow-lg mx-16 h-54 relative">
@@ -15,7 +15,7 @@ export const ProfileDetailsSection = () => {
           <div className="flex flex-col gap-2">
             <div>
               <h1 className="text-2xl font-bold ">Manoj Kumar</h1>
-              <span>Student</span> |{" "}
+              <span>{isOrganiser ? "Organiser" : "Student"}</span> |{" "}
               <span>Career Point University, Hamirpur</span>
             </div>
             <p className="flex gap-4 items-center">
@@ -36,8 +36,11 @@ export const ProfileDetailsSection = () => {
             </div>
           </div>
         </div>
-        <button className="flex gap-2 items-center absolute top-4 right-6">
-          <PenIcon className="size-5"/>
+        <button
+          onClick={() => setVisible((prev) => !prev)}
+          className="flex gap-2 items-center absolute top-4 right-6"
+        >
+          <PenIcon className="size-5" />
           Edit Profile
         </button>
       </section>
