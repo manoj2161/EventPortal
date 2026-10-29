@@ -13,7 +13,7 @@ const port = process.env.PORT;
 const appName = process.env.APP_NAME;
 connectdb();
 app.get("/", (res, req) => {
-  return res.statusCode(200).json({
+  return res.status(200).json({
     isSuccess: true,
     message: "Server is running successfully",
     statusCode: 200,
