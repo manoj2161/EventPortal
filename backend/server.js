@@ -12,13 +12,7 @@ app.use(express.json());
 const port = process.env.PORT;
 const appName = process.env.APP_NAME;
 connectdb();
-app.get("/", (res, req) => {
-  return res.status(200).json({
-    isSuccess: true,
-    message: "Server is running successfully",
-    statusCode: 200,
-  });
-});
+
 app.use("/api/auth/user", userRouter);
 app.listen(port, () => {
   console.log(`${appName} is running on port ${port}`);
