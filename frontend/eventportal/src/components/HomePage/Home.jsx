@@ -15,8 +15,8 @@ export const Home = () => {
         if (!events) {
           return console.log("No events found");
         }
-        setUpcomingEvents(events.data);
-        console.log(events);
+        setUpcomingEvents(events.data.data);
+        console.log(events.data.data);
       } catch (error) {
         console.log(error);
       }
@@ -29,7 +29,7 @@ export const Home = () => {
       <Header isOrganiser={isOrganiser} />
       <Welcome />
       <FeaturedEvent />
-      <UpcomingEvents />
+      <UpcomingEvents upcomingEvents={upcomingEvents} />
     </>
   );
 };
