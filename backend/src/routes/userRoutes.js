@@ -15,6 +15,7 @@ import {
 import { verifyTokenAuth } from "../middleware/authMiddleware.js";
 import { verifyAdmin } from "../middleware/adminMiddleware.js";
 const router = express.Router();
+router.get("/dashboard",getEvents);
 // signup user
 router.post("/signup", createUser);
 // signin user
