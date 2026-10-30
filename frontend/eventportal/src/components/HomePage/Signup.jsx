@@ -14,13 +14,14 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import clsx from "clsx";
-import { Loader } from "./Loader";
+import { AuthLogin, Loader } from "./Loader";
 import axios from "axios";
 import { createUser, getUsers } from "../../api/apiroutes";
 export const Signup = () => {
   const [loading, setLoading] = useState(true);
   const [show, setShow] = useState(false);
   const [errors, setErrors] = useState({});
+  const [authLoader, setAuthLoader] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -68,6 +69,7 @@ export const Signup = () => {
       category: category,
     };
     try {
+      setAuthLoader(true);
       const getResponse = await axios.get(getUsers);
       const users = getResponse.data.data;
       const existingUser = users.find(
@@ -84,6 +86,10 @@ export const Signup = () => {
       }
       const response = await axios.post(createUser, data);
       console.log(response);
+      setTimeout(() => {
+        setAuthLoader(false);
+        return <AuthLogin />;
+      }, 1000);
       navigate("/emailVerificationPage");
     } catch (err) {
       const message = err.response?.data?.message || "";
@@ -104,6 +110,8 @@ export const Signup = () => {
           server: message || "Registration failed. Please try again.",
         }));
       }
+    } finally {
+      setAuthLoader(false);
     }
   };
   useEffect(() => {
@@ -282,14 +290,20 @@ export const Signup = () => {
                 </div>
               </div>
             </div>
-            <div className="flex items-center justify-center bg-yellow-400 rounded-full w-88 h-10 my-4">
-              <input
-                type="submit"
-                value="Create Account"
-                className="text-lg font-semibold"
-              />{" "}
-              <ArrowRight className="size-5 mt-1 ml-2" />
-            </div>
+            <button className="flex items-center justify-center bg-yellow-400 rounded-full w-88 h-10 my-4">
+              {authLoader ? (
+                <AuthLogin />
+              ) : (
+                <div className="flex">
+                  <input
+                    type="submit"
+                    value="Create Account"
+                    className="text-lg font-semibold"
+                  />
+                  <ArrowRight className="size-5 mt-1 ml-2" />
+                </div>
+              )}
+            </button>
             <p className="text-red-500 text-sm py-1 ml-16">{errors.server}</p>
             <p className="ml-8">
               Already have an account?

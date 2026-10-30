@@ -7,3 +7,13 @@ export const Loader = () => {
     </>
   );
 };
+
+export const AuthLogin = () => {
+  return (
+    <>
+      <div className="flex justify-center items-center">
+        <div className="w-6 h-6 border-6 border-black border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    </>
+  );
+};

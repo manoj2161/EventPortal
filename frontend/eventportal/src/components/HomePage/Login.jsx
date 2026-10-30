@@ -13,13 +13,14 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import clsx from "clsx";
-import { Loader } from "./Loader";
-import { dashboard, getUsers } from "../../api/apiroutes";
+import { AuthLogin, Loader } from "./Loader";
+import { getUsers } from "../../api/apiroutes";
 import axios from "axios";
 export const Login = () => {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState({});
+  const [authLoader, setAuthLoader] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -44,6 +45,10 @@ export const Login = () => {
       ...prev,
       [name]: value,
     }));
+    setErrors({
+      ...errors,
+      [name]: "",
+    });
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,6 +56,7 @@ export const Login = () => {
       return;
     }
     try {
+      setAuthLoader(true);
       const getResponse = await axios.get(getUsers);
       const users = getResponse.data.data;
       const existingUser = users.find(
@@ -59,13 +65,34 @@ export const Login = () => {
       );
       if (!existingUser) {
         console.log("User does not exists");
-        return;
+        return setErrors({
+          ...errors,
+          email: "Invalid email or password",
+        });
       }
-      console.log(users);
+
       const verified = existingUser.isVerified;
+      if (!verified) {
+        console.log("Please verify your email first.");
+        return setErrors({
+          ...errors,
+          verification: "Please verify your email before login.",
+        });
+      }
       console.log(verified);
+      setTimeout(() => {
+        setAuthLoader(false);
+        return <AuthLogin />;
+      }, 1000);
+      console.log("login successfull");
     } catch (err) {
-      console.log(err);
+      const message = err.response?.data?.message || "";
+      setErrors((prev) => ({
+        ...prev,
+        server: message || "Login failed. Please try again.",
+      }));
+    } finally {
+      setAuthLoader(false);
     }
   };
   useEffect(() => {
@@ -131,7 +158,7 @@ export const Login = () => {
             </p>
           </div>
           <form action="" onSubmit={handleSubmit} className="ml-8 mt-8">
-            <div className="w-88 h-24  relative flex flex-col">
+            <div className="w-88 h-24 relative flex flex-col">
               <label htmlFor="email" className="text-lg font-semibold">
                 Email
               </label>
@@ -144,6 +171,8 @@ export const Login = () => {
                 placeholder="you@example.com"
               />
               <Mail className="absolute bottom-9 left-2 text-gray-400 size-5" />
+              <p className="text-red-500 text-sm py-1">{errors.email}</p>
+              <span className="absolute left-13 text-red-500">*</span>
             </div>
             <div className="w-88 h-24 relative flex flex-col">
               <label htmlFor="password" className="text-lg font-semibold">
@@ -176,6 +205,8 @@ export const Login = () => {
                 )}
               />
               <Lock className="absolute bottom-9 left-2 text-gray-400 size-5" />
+              <p className="text-red-500 text-sm py-1">{errors.password}</p>
+              <span className="absolute left-22.5 text-red-500">*</span>
             </div>
             <div className="w-88 h-16 flex justify-center ml-26 items-center">
               {/* <div className="flex gap-2">
@@ -184,14 +215,25 @@ export const Login = () => {
               </div> */}
               <span className="text-gray-400 border-b-2">Forgot password?</span>
             </div>
-            <div className="flex items-center justify-center bg-yellow-400 rounded-full w-88 h-10 ">
-              <input
-                type="submit"
-                value="Log In"
-                className="text-lg font-semibold"
-              />{" "}
-              <ArrowRight className="size-5 mt-1 ml-2" />
-            </div>
+            <button className="flex items-center justify-center bg-yellow-400 rounded-full w-88 h-10 ">
+              {authLoader ? (
+                <AuthLogin />
+              ) : (
+                <div className="flex">
+                  <input
+                    type="submit"
+                    value="Log In"
+                    className="text-lg font-semibold"
+                  />{" "}
+                  <ArrowRight
+                    className="size-5 mt-1 ml-2
+                  "
+                  />
+                </div>
+              )}
+            </button>
+            <p className="text-red-500 text-sm py-1">{errors.verification}</p>
+            <span className="absolute left-13 text-red-500">*</span>
             <p className="ml-8 mt-5">
               Don't have an account?
               <Link
