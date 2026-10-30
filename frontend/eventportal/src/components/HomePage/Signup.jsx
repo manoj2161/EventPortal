@@ -59,7 +59,6 @@ export const Signup = () => {
     }));
   };
   const handleSubmit = async (e) => {
-    const newErrors = {};
     e.preventDefault();
     if (!validateForm()) {
       return;
@@ -70,29 +69,41 @@ export const Signup = () => {
     };
     try {
       const getResponse = await axios.get(getUsers);
-      console.log(getResponse.data.data);
-      const existingUser = response.find(
-        (user) => formData.email === user.data.data.email,
+      const users = getResponse.data.data;
+      const existingUser = users.find(
+        (user) =>
+          user.email.toLowerCase() === formData.email.trim().toLowerCase(),
       );
       if (existingUser) {
-        setErrors({
-          ...errors,
+        setErrors((prev) => ({
+          ...prev,
           email: "User already exists",
-        });
-        return Object.keys(newErrors).length === 0;
+          server: "",
+        }));
+        return;
       }
       const response = await axios.post(createUser, data);
       console.log(response);
       navigate("/emailVerificationPage");
     } catch (err) {
-      newErrors.password = err.message;
-      setErrors({
-        ...errors,
-        server:
-          err.respose?.data?.message ||
-          "Registration failed. Please try again.",
-      });
-      return Object.keys(newErrors).length === 0;
+      const message = err.response?.data?.message || "";
+
+      if (
+        err.response?.status === 409 ||
+        message.toLowerCase().includes("already exists") ||
+        message.toLowerCase().includes("duplicate")
+      ) {
+        setErrors((prev) => ({
+          ...prev,
+          email: "Email already registered",
+          server: "",
+        }));
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          server: message || "Registration failed. Please try again.",
+        }));
+      }
     }
   };
   useEffect(() => {

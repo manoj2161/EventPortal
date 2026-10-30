@@ -324,7 +324,7 @@ export const getAllUsers = async (req, res) => {
   try {
     const users = await User.find({
       category: { $in: ["Student", "Organiser"] },
-    }).select("name email category");
+    }).select("name email category isVerified");
     if (users.length === 0) {
       return res.status(404).json({
         isSuccess: false,
