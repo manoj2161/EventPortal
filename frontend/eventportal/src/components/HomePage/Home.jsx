@@ -5,8 +5,12 @@ import { UpcomingEvents } from "./UpcomingEvents";
 import { Welcome } from "./Welcome";
 import { getEvents } from "../../api/apiroutes";
 import axios from "axios";
+import { Loader } from "./Loader";
 export const Home = () => {
-  const [isOrganiser, setIsOrganiser] = useState(true);
+  const [isOrganiser, setIsOrganiser] = useState(false);
+  const [isStudent, setIsStudent] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   useEffect(() => {
     const getUpcomigEvents = async () => {
@@ -23,10 +27,21 @@ export const Home = () => {
     };
     getUpcomigEvents();
   }, []);
-
+  useEffect(() => {
+    setTimeout(() => {
+      return setLoading(false);
+    }, 1000);
+  }, []);
+  if (loading) {
+    return <Loader />;
+  }
   return (
     <>
-      <Header isOrganiser={isOrganiser} />
+      <Header
+        isOrganiser={isOrganiser}
+        isStudent={isStudent}
+        isLogin={isLogin}
+      />
       <Welcome />
       <FeaturedEvent />
       <UpcomingEvents upcomingEvents={upcomingEvents} />

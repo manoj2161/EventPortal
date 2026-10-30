@@ -11,16 +11,26 @@ import {
   Mail,
   CalendarDays,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import clsx from "clsx";
+import { Loader } from "./Loader";
 export const Login = () => {
   const [show, setShow] = useState(false);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    setTimeout(() => {
+      return setLoading(false);
+    }, 1000);
+  }, []);
+  if (loading) {
+    return <Loader />;
+  }
   return (
     <>
       <section className="flex justify-center">
-        <div className="h-screen w-[60%] flex flex-col justify-between bg-orange-50">
+        <div className="h-screen w-[60%] flex flex-col justify-between bg-blue-100">
           <div className="flex justify-center ml-32 gap-4 mt-32">
-              <div className="flex gap-6 text-xl">
+            <div className="flex gap-6 text-xl">
               <div className="flex flex-col gap-3 bg-white  rounded-4xl  w-68 p-3">
                 <CalendarDays className="size-12 bg-yellow-300 p-2 rounded-full border border-gray-200" />
                 <p className="text-gray-500 font-semibold">

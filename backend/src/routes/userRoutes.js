@@ -15,7 +15,7 @@ import {
 import { verifyTokenAuth } from "../middleware/authMiddleware.js";
 import { verifyAdmin } from "../middleware/adminMiddleware.js";
 const router = express.Router();
-router.get("/dashboard",getEvents);
+router.get("/dashboard", getEvents);
 // signup user
 router.post("/signup", createUser);
 // signin user
@@ -30,6 +30,7 @@ router.get("/profile/dashboard", verifyTokenAuth, getEvents);
 router.put("/profile/update-profile", verifyTokenAuth, updateProfile);
 // get all users
 router.get("/admin/users", verifyTokenAuth, verifyAdmin, getAllUsers);
+router.get("/users", getAllUsers);
 // delete user
 router.delete(
   "/admin/users/:id/delete",

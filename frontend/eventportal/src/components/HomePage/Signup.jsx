@@ -1,6 +1,6 @@
 import graduationHat from "../../assets/graduation-hat.png";
 import loginimg from "../../assets/loginimg.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   ArrowRight,
   Eye,
@@ -12,14 +12,101 @@ import {
   User,
   CalendarDays,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import clsx from "clsx";
+import { Loader } from "./Loader";
+import axios from "axios";
+import { createUser, getUsers } from "../../api/apiroutes";
 export const Signup = () => {
+  const [loading, setLoading] = useState(true);
   const [show, setShow] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+  const [category, setcategory] = useState("Student");
+  const navigate = useNavigate();
+  const validateForm = () => {
+    const newErrors = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}$/;
+    if (!formData.name.trim()) {
+      newErrors.name = "Name is required";
+    }
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!emailRegex.test(formData.email)) {
+      newErrors.email = "Enter a valid email address";
+    }
+    if (!formData.password.trim()) {
+      newErrors.password = "Password is required";
+    } else if (!passwordRegex.test(formData.password)) {
+      newErrors.password =
+        "Password must contain a Uppercase,lowercase,number,special character and length should be atleast 8 characters";
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({
+      ...prev,
+      [name]: "",
+    }));
+  };
+  const handleSubmit = async (e) => {
+    const newErrors = {};
+    e.preventDefault();
+    if (!validateForm()) {
+      return;
+    }
+    const data = {
+      ...formData,
+      category: category,
+    };
+    try {
+      const getResponse = await axios.get(getUsers);
+      console.log(getResponse.data.data);
+      const existingUser = response.find(
+        (user) => formData.email === user.data.data.email,
+      );
+      if (existingUser) {
+        setErrors({
+          ...errors,
+          email: "User already exists",
+        });
+        return Object.keys(newErrors).length === 0;
+      }
+      const response = await axios.post(createUser, data);
+      console.log(response);
+      navigate("/emailVerificationPage");
+    } catch (err) {
+      newErrors.password = err.message;
+      setErrors({
+        ...errors,
+        server:
+          err.respose?.data?.message ||
+          "Registration failed. Please try again.",
+      });
+      return Object.keys(newErrors).length === 0;
+    }
+  };
+  useEffect(() => {
+    setTimeout(() => {
+      return setLoading(false);
+    }, 1000);
+  }, []);
+  if (loading) {
+    return <Loader />;
+  }
   return (
     <>
       <section className="flex justify-center">
-        <div className="h-screen w-[60%] flex flex-col justify-between bg-orange-50">
+        <div className="h-screen w-[60%] flex flex-col justify-between bg-blue-100">
           <div className="flex justify-center ml-32 gap-4 mt-32">
             <div className="flex gap-6 text-xl">
               <div className="flex flex-col gap-3 bg-white  rounded-4xl  w-68 p-3">
@@ -33,7 +120,7 @@ export const Signup = () => {
                 </p>
               </div>
               <div className="flex flex-col gap-3 bg-white rounded-4xl bg-orange-100 w-68 p-3">
-                <FileText className="size-13 bg-yellow-300 p-2 rounded-full border border-gray-200" />
+                <FileText className="size-12 bg-yellow-300 p-2 rounded-full border border-gray-200" />
                 <p className="text-gray-500 font-semibold">
                   <span className="text-black font-bold text-2xl">
                     Manage Registrations
@@ -43,7 +130,7 @@ export const Signup = () => {
                 </p>
               </div>
               <div className="flex flex-col gap-3 bg-white  rounded-4xl bg-orange-100 w-68 p-3">
-                <UserGroup className="size-13 bg-yellow-300 p-2 rounded-full border border-gray-200" />
+                <UserGroup className="size-12 bg-yellow-300 p-2 rounded-full border border-gray-200" />
                 <p className="text-gray-500 font-semibold">
                   <span className="text-black font-bold text-2xl">
                     Connect & Grow
@@ -72,7 +159,7 @@ export const Signup = () => {
             </p>
           </div>
 
-          <form action="" className="ml-8">
+          <form action="" onSubmit={handleSubmit} className="ml-8">
             <div className="w-88 h-24  relative flex flex-col">
               <label htmlFor="name" className="text-lg font-semibold">
                 Full Name
@@ -80,10 +167,17 @@ export const Signup = () => {
               <input
                 type="text"
                 name="name"
-                className="border w-88 h-10 rounded-lg border-gray-400 pl-8 text-gray-400 outline-none"
+                value={formData.name}
+                onChange={handleChange}
+                className={clsx(
+                  "border-2 w-88 h-10 rounded-lg border-gray-400 pl-8 text-gray-400 outline-yellow-400",
+                  errors.name && "border-2 border-red-500",
+                )}
                 placeholder="Enter your full name"
               />
               <User className="absolute bottom-9 left-2 text-gray-400 size-5" />
+              <p className="text-red-500 text-sm py-1">{errors.name}</p>
+              <span className="text-red-500 absolute left-23">*</span>
             </div>
             <div className="w-88 h-24  relative flex flex-col">
               <label htmlFor="email" className="text-lg font-semibold">
@@ -92,10 +186,17 @@ export const Signup = () => {
               <input
                 type="email"
                 name="email"
-                className="border w-88 h-10 rounded-lg border-gray-400 pl-8 text-gray-400 outline-none"
+                value={formData.email}
+                onChange={handleChange}
+                className={clsx(
+                  "border w-88 h-10 rounded-lg border-gray-400 pl-8 text-gray-400 outline-none",
+                  errors.email && "border-2 border-red-500",
+                )}
                 placeholder="you@example.com"
               />
               <Mail className="absolute bottom-9 left-2 text-gray-400 size-5" />
+              <p className="text-red-500 text-sm py-1">{errors.email}</p>
+              <span className="text-red-500 absolute left-13">*</span>
             </div>
             <div className="w-88 h-24 relative flex flex-col">
               <label htmlFor="password" className="text-lg font-semibold">
@@ -104,7 +205,12 @@ export const Signup = () => {
               <input
                 type={show ? "text" : "password"}
                 name="password"
-                className="border w-88 h-10 rounded-lg border-gray-400 pl-8 text-gray-400 outline-none"
+                value={formData.password}
+                onChange={handleChange}
+                className={clsx(
+                  "border w-88 h-10 rounded-lg border-gray-400 pl-8 text-gray-400 outline-none",
+                  errors.password && "border-2 border-red-500",
+                )}
                 placeholder="Enter your password"
               />
               <Eye
@@ -126,6 +232,8 @@ export const Signup = () => {
                 )}
               />
               <Lock className="absolute bottom-9 left-2 text-gray-400 size-5" />
+              <p className="text-red-500 text-sm py-1">{errors.password}</p>
+              <span className="text-red-500 absolute left-22.5">*</span>
             </div>
             <div className="w-88 flex flex-col justify-between">
               <label
@@ -136,12 +244,28 @@ export const Signup = () => {
               </label>
               <div className="flex justify-between ">
                 <div className="relative flex">
-                  <button className="w-42 border border-yellow-500 border-2 px-6 py-2 rounded-xl bg-yellow-100">
+                  <button
+                    type="button"
+                    onClick={() => setcategory("Student")}
+                    className={clsx(
+                      "w-42 border border-gray-400 border-2 px-6 py-2 rounded-xl",
+                      category === "Student" &&
+                        "border-yellow-500 bg-yellow-100",
+                    )}
+                  >
                     Student
                   </button>
                 </div>
                 <div className="relative">
-                  <button className="w-42 border border-gray-400 border-2 px-6 py-2 rounded-xl ">
+                  <button
+                    type="button"
+                    onClick={() => setcategory("Organiser")}
+                    className={clsx(
+                      "w-42 border border-gray-400 border-2 px-6 py-2 rounded-xl",
+                      category === "Organiser" &&
+                        "border-yellow-500 bg-yellow-100",
+                    )}
+                  >
                     Organiser
                   </button>
                 </div>
@@ -155,6 +279,7 @@ export const Signup = () => {
               />{" "}
               <ArrowRight className="size-5 mt-1 ml-2" />
             </div>
+            <p className="text-red-500 text-sm py-1 ml-16">{errors.server}</p>
             <p className="ml-8">
               Already have an account?
               <Link

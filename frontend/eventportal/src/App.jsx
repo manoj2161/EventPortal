@@ -4,6 +4,7 @@ import { Login } from "./components/HomePage/Login";
 import { Signup } from "./components/HomePage/Signup";
 import { Dashboard } from "./components/HomePage/Dashboard";
 import { Profile } from "./components/HomePage/Profile";
+import { EmailVerificationMessagePage } from "./components/HomePage/EmailVerificationMessagePage";
 function App() {
   return (
     <>
@@ -13,6 +14,10 @@ function App() {
         <Route path="/signup" element={<Signup />}></Route>
         <Route path="/dashboard" element={<Dashboard />}></Route>
         <Route path="/profile" element={<Profile />}></Route>
+        <Route
+          path="/emailVerificationPage"
+          element={<EmailVerificationMessagePage />}
+        ></Route>
       </Routes>
     </>
   );
