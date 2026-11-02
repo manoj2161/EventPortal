@@ -1,6 +1,6 @@
 import graduationHat from "../../assets/graduation-hat.png";
 import loginimg from "../../assets/loginimg.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   ArrowRight,
   Eye,
@@ -16,15 +16,20 @@ import clsx from "clsx";
 import { AuthLogin, Loader } from "./Loader";
 import { getUsers } from "../../api/apiroutes";
 import axios from "axios";
-export const Login = () => {
+export const Login = ({ isOrganiser, setIsOrganiser, isLogin, setIsLogin }) => {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState({});
   const [authLoader, setAuthLoader] = useState(false);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  useEffect(() => {
+    setIsLogin(false);
+    console.log(isLogin);
+  }, []);
   const validateForm = () => {
     const newErrors = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -85,6 +90,8 @@ export const Login = () => {
         return <AuthLogin />;
       }, 1000);
       console.log("login successfull");
+      navigate("/dashboard");
+      setIsLogin(true);
     } catch (err) {
       const message = err.response?.data?.message || "";
       setErrors((prev) => ({

@@ -6,10 +6,7 @@ import { Welcome } from "./Welcome";
 import { getEvents } from "../../api/apiroutes";
 import axios from "axios";
 import { Loader } from "./Loader";
-export const Home = () => {
-  const [isOrganiser, setIsOrganiser] = useState(false);
-  const [isStudent, setIsStudent] = useState(false);
-  const [isLogin, setIsLogin] = useState(false);
+export const Home = ({ isOrganiser, isStudent, isLogin }) => {
   const [loading, setLoading] = useState(true);
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   useEffect(() => {

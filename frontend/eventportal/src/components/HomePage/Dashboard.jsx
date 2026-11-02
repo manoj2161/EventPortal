@@ -4,10 +4,8 @@ import { Header } from "./Header";
 import { UpcomingEvents } from "./UpcomingEvents";
 import { Welcome } from "./Welcome";
 import axios from "axios";
-import {getEvents} from "../../api/apiroutes";
-export const Dashboard = () => {
-  const [visible, setVisible] = useState(false);
-  const [isOrganiser, setIsOrganiser] = useState(true);
+import { getEvents } from "../../api/apiroutes";
+export const Dashboard = ({ visible, setVisible, isOrganiser }) => {
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   useEffect(() => {
     const getUpcomigEvents = async () => {
@@ -17,6 +15,7 @@ export const Dashboard = () => {
           return console.log("No events found");
         }
         setUpcomingEvents(events.data.data);
+        console.log("User is logged in");
         console.log(events.data.data);
       } catch (error) {
         console.log(error);
