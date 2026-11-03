@@ -11,6 +11,7 @@ import {
   getEvents,
   eventStatus,
   logoutUser,
+  verifyToken,
 } from "../controllers/userControllers.js";
 import { verifyTokenAuth } from "../middleware/authMiddleware.js";
 import { verifyAdmin } from "../middleware/adminMiddleware.js";
@@ -44,4 +45,6 @@ router.put("/profile/dashboard/create-event", verifyTokenAuth, createEvent);
 router.patch("/profile/dashboard/:id/status", verifyTokenAuth, eventStatus);
 // logout route
 router.patch("/profile/dashboard/signout", verifyTokenAuth, logoutUser);
+
+router.get("/me", verifyTokenAuth, verifyToken);
 export default router;

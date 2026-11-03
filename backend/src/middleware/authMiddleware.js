@@ -31,6 +31,7 @@ export const verifyTokenAuth = async (req, res, next) => {
       isAdmin: user.isAdmin,
       category: user.category,
     };
+    return next();
   } catch (error) {
     console.error(error);
     if (
@@ -50,5 +51,4 @@ export const verifyTokenAuth = async (req, res, next) => {
       });
     }
   }
-  next();
 };

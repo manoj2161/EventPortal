@@ -529,3 +529,9 @@ export const logoutUser = async (req, res) => {
     });
   }
 };
+export const verifyToken = () => (req, res) => {
+  return res.status(200).json({
+    isSuccess: true,
+    user: req.user,
+  });
+};
