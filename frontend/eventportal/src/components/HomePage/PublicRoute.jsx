@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import api from "../api/axios";
+import { api } from "../../api/axios";
 
-const PublicRoute = () => {
+export const PublicRoute = () => {
   const [authenticated, setAuthenticated] = useState(null);
 
   useEffect(() => {
@@ -18,5 +18,3 @@ const PublicRoute = () => {
 
   return authenticated ? <Navigate to="/dashboard" replace /> : <Outlet />;
 };
-
-export default PublicRoute;

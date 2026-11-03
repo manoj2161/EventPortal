@@ -14,8 +14,7 @@ import {
 import { useEffect, useState } from "react";
 import clsx from "clsx";
 import { AuthLogin, Loader } from "./Loader";
-import { getUsers } from "../../api/apiroutes";
-import axios from "axios";
+import { api } from "../../api/axios";
 export const Login = ({ isOrganiser, setIsOrganiser, isLogin, setIsLogin }) => {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -55,61 +54,47 @@ export const Login = ({ isOrganiser, setIsOrganiser, isLogin, setIsLogin }) => {
       [name]: "",
     });
   };
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validateForm()) {
-      return;
-    }
-    try {
-      setAuthLoader(true);
-      const getResponse = await axios.get(getUsers);
-      const users = getResponse.data.data;
-      const existingUser = users.find(
-        (user) =>
-          user.email.toLowerCase() === formData.email.trim().toLowerCase(),
-      );
-      if (!existingUser) {
-        console.log("User does not exists");
-        return setErrors({
-          ...errors,
-          email: "Invalid email or password",
-        });
-      }
 
-      const verified = existingUser.isVerified;
-      if (!verified) {
-        console.log("Please verify your email first.");
-        return setErrors({
-          ...errors,
-          verification: "Please verify your email before login.",
-        });
-      }
-      console.log(verified);
-      setTimeout(() => {
-        setAuthLoader(false);
-        return <AuthLogin />;
-      }, 1000);
-      console.log("login successfull");
-      navigate("/dashboard");
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (!validateForm()) return;
+
+  try {
+    setAuthLoader(true);
+    setErrors({});
+
+    const response = await api.post("/signin", {
+      email: formData.email.trim(),
+      password: formData.password,
+    });
+
+    if (response.data.isSuccess) {
       setIsLogin(true);
-    } catch (err) {
-      const message = err.response?.data?.message || "";
-      setErrors((prev) => ({
-        ...prev,
-        server: message || "Login failed. Please try again.",
-      }));
-    } finally {
-      setAuthLoader(false);
+      navigate("/dashboard", { replace: true });
+    } else {
+      setErrors({
+        server: response.data.message || "Login failed.",
+      });
     }
-  };
-  useEffect(() => {
-    setTimeout(() => {
-      return setLoading(false);
-    }, 1000);
-  }, []);
-  if (loading) {
-    return <Loader />;
+  } catch (err) {
+    const status = err.response?.status;
+    const message = err.response?.data?.message;
+
+    if (status === 403) {
+      setErrors({
+        verification: message || "Please verify your email first.",
+      });
+    } else {
+      setErrors({
+        server: message || "Invalid email or password.",
+      });
+    }
+  } finally {
+    setAuthLoader(false);
   }
+};
 
   return (
     <>

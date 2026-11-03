@@ -6,7 +6,7 @@ import { Dashboard } from "./components/HomePage/Dashboard";
 import { Profile } from "./components/HomePage/Profile";
 import { EmailVerificationMessagePage } from "./components/HomePage/EmailVerificationMessagePage";
 import { useState } from "react";
-import PublicRoute from "./components/HomePage/PublicRoute";
+import {PublicRoute} from "./components/HomePage/PublicRoute";
 import { ProtectedRoute } from "./components/HomePage/ProtectedRoute";
 function App() {
   const [visible, setVisible] = useState(false);
