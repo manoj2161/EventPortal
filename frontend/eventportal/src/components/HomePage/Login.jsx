@@ -14,27 +14,22 @@ import {
   CalendarDays,
 } from "lucide-react";
 
-import { useEffect, useState } from "react";
-import clsx from "clsx";
+import { useState } from "react";
 
 import { AuthLogin } from "./Loader";
 import { api } from "../../api/axios";
 
-export const Login = ({ isOrganiser, setIsOrganiser, isLogin, setIsLogin }) => {
+export const Login = ({ setIsLogin, setIsOrganiser, setIsStudent }) => {
   const [show, setShow] = useState(false);
   const [errors, setErrors] = useState({});
   const [authLoader, setAuthLoader] = useState(false);
 
-  const navigate = useNavigate();
-
+  
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-
-  useEffect(() => {
-    setIsLogin(false);
-  }, [setIsLogin]);
+  const navigate = useNavigate();
 
   // Form validation
   const validateForm = () => {
@@ -74,60 +69,59 @@ export const Login = ({ isOrganiser, setIsOrganiser, isLogin, setIsLogin }) => {
   };
 
   // Handle login
-  const handleSubmit = async (e) => {
-    e.preventDefault();
 
-    console.log("LOGIN FORM SUBMITTED");
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    const isValid = validateForm();
+  if (!validateForm()) return;
 
-    console.log("VALIDATION RESULT:", isValid);
+  try {
+    setAuthLoader(true);
+    setErrors({});
 
-    if (!isValid) return;
+    const response = await api.post("/signin", {
+      email: formData.email.trim(),
+      password: formData.password,
+    });
 
-    try {
-      setAuthLoader(true);
-      setErrors({});
+    if (response.data.isSuccess) {
+      const category = response.data.category;
 
-      console.log("SENDING LOGIN REQUEST:", `${api.defaults.baseURL}/signin`);
+      // Set authentication state
+      setIsLogin(true);
 
-      const response = await api.post("/signin", {
-        email: formData.email.trim(),
-        password: formData.password,
+      // Set the correct user role
+      setIsOrganiser(category === "Organiser");
+      setIsStudent(category === "Student");
+
+      // Navigate after successful login
+      navigate("/dashboard", {
+        replace: true,
       });
-
-      console.log("LOGIN RESPONSE:", response.data);
-
-      if (response.data.isSuccess) {
-        setIsLogin(true);
-
-        navigate("/dashboard", {
-          replace: true,
-        });
-      } else {
-        setErrors({
-          server: response.data.message || "Login failed.",
-        });
-      }
-    } catch (err) {
-      console.error("LOGIN ERROR:", err.response?.data || err.message);
-
-      const status = err.response?.status;
-      const message = err.response?.data?.message;
-
-      if (status === 403) {
-        setErrors({
-          verification: message || "Please verify your email first.",
-        });
-      } else {
-        setErrors({
-          server: message || "Invalid email or password.",
-        });
-      }
-    } finally {
-      setAuthLoader(false);
+    } else {
+      setErrors({
+        server: response.data.message || "Login failed.",
+      });
     }
-  };
+  } catch (err) {
+    console.error("LOGIN ERROR:", err.response?.data || err.message);
+
+    const status = err.response?.status;
+    const message = err.response?.data?.message;
+
+    if (status === 403) {
+      setErrors({
+        verification: message || "Please verify your email first.",
+      });
+    } else {
+      setErrors({
+        server: message || "Invalid email or password.",
+      });
+    }
+  } finally {
+    setAuthLoader(false);
+  }
+};
 
   return (
     <section className="flex justify-center">

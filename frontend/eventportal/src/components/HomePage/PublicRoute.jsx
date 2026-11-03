@@ -1,18 +1,16 @@
 import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { api } from "../../api/axios";
+import { Loader } from "./Loader";
 
 export const PublicRoute = () => {
   const [authenticated, setAuthenticated] = useState(null);
 
   useEffect(() => {
-    console.log("1. PublicRoute mounted");
-    console.log("2. API URL:", api.defaults.baseURL);
 
     api
       .get("/me")
-      .then((response) => {
-        console.log("3. API success:", response.status, response.data);
+      .then(() => {
         setAuthenticated(true);
       })
       .catch((error) => {
@@ -23,7 +21,7 @@ export const PublicRoute = () => {
   }, []);
 
   if (authenticated === null) {
-    return <p>Checking authentication...</p>;
+    return <Loader />;
   }
 
   return authenticated ? <Navigate to="/dashboard" replace /> : <Outlet />;

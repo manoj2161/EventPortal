@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
 import clsx from "clsx";
 import { AuthLogin, Loader } from "./Loader";
 import axios from "axios";
-import { createUser, getUsers } from "../../api/apiroutes";
+import { createUser } from "../../api/apiroutes";
 export const Signup = () => {
   const [loading, setLoading] = useState(true);
   const [show, setShow] = useState(false);

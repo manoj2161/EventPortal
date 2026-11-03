@@ -10,8 +10,8 @@ import {PublicRoute} from "./components/HomePage/PublicRoute";
 import { ProtectedRoute } from "./components/HomePage/ProtectedRoute";
 function App() {
   const [visible, setVisible] = useState(false);
-  const [isOrganiser, setIsOrganiser] = useState(false);
-  const [isStudent, setIsStudent] = useState(false);
+  const [isOrganiser, setIsOrganiser] = useState("");
+  const [isStudent, setIsStudent] = useState("");
   const [isLogin, setIsLogin] = useState(false);
   return (
     <>
@@ -35,6 +35,8 @@ function App() {
                 isOrganiser={isOrganiser}
                 setIsOrganiser={setIsOrganiser}
                 isLogin={isLogin}
+                isStudent={isStudent}
+                setIsStudent={setIsStudent}
                 setIsLogin={setIsLogin}
               />
             }

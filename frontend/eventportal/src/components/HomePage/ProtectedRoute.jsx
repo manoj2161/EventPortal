@@ -1,6 +1,7 @@
 import { api } from "../../api/axios";
 import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
+import { Loader } from "./Loader";
 
 export const ProtectedRoute = () => {
   const [authenticated, setAuthenticated] = useState(null);
@@ -13,7 +14,7 @@ export const ProtectedRoute = () => {
   }, []);
 
   if (authenticated === null) {
-    return <p>Checking authentication...</p>;
+    return <Loader />;
   }
 
   return authenticated ? <Outlet /> : <Navigate to="/login" replace />;
