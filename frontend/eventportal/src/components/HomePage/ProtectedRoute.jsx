@@ -7,7 +7,7 @@ export const ProtectedRoute = () => {
 
   useEffect(() => {
     api
-      .get("/api/auth/me")
+      .get("/me")
       .then(() => setAuthenticated(true))
       .catch(() => setAuthenticated(false));
   }, []);

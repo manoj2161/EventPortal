@@ -70,20 +70,6 @@ export const Signup = () => {
     };
     try {
       setAuthLoader(true);
-      const getResponse = await axios.get(getUsers);
-      const users = getResponse.data.data;
-      const existingUser = users.find(
-        (user) =>
-          user.email.toLowerCase() === formData.email.trim().toLowerCase(),
-      );
-      if (existingUser) {
-        setErrors((prev) => ({
-          ...prev,
-          email: "User already exists",
-          server: "",
-        }));
-        return;
-      }
       const response = await axios.post(createUser, data);
       console.log(response);
       setTimeout(() => {
