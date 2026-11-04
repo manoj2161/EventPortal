@@ -5,7 +5,7 @@ import { UpcomingEvents } from "./UpcomingEvents";
 import { Welcome } from "./Welcome";
 import axios from "axios";
 import { getEvents } from "../../api/apiroutes";
-export const Dashboard = ({ visible, setVisible, isOrganiser }) => {
+export const Dashboard = ({ visible, setVisible, isOrganiser, isLogin }) => {
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   useEffect(() => {
     const getUpcomigEvents = async () => {

@@ -35,9 +35,9 @@ function App() {
                 isOrganiser={isOrganiser}
                 setIsOrganiser={setIsOrganiser}
                 isLogin={isLogin}
+                setIsLogin={setIsLogin}
                 isStudent={isStudent}
                 setIsStudent={setIsStudent}
-                setIsLogin={setIsLogin}
               />
             }
           ></Route>

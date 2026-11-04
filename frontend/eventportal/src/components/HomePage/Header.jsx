@@ -5,14 +5,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { api } from "../../api/axios";
 import { signout } from "../../api/apiroutes";
+import { useAuth } from "../../context/AuthContext";
 
-export const Header = ({
-  isOrganiser,
-  setVisible,
-  isStudent,
-  isLogin,
-  setIsLogin,
-}) => {
+export const Header = () => {
+  const { isLogin, isStudent, isOrganiser, logout } = useAuth();
   const navigate = useNavigate();
   const [logoutLoading, setLogoutLoading] = useState(false);
 
@@ -26,7 +22,7 @@ export const Header = ({
       const response = await api.patch(signout);
 
       if (response.data.isSuccess) {
-        setIsLogin(false);
+        logout();
         navigate("/login", { replace: true });
       }
     } catch (err) {
@@ -76,18 +72,17 @@ export const Header = ({
 
         {/* Login / Logout */}
         {isLogin ? (
-          <Link to="/login" className="hover:text-yellow-600 transition">
-            Login
-          </Link>
-        ) : (
           <button
             type="button"
             onClick={handleLogout}
-            disabled={logoutLoading}
             className="disabled:opacity-60 disabled:cursor-not-allowed px-5 py-2 rounded-lg transition"
           >
-            {logoutLoading ? "Logging out..." : "Logout"}
+            Logout
           </button>
+        ) : (
+          <Link to="/login" className="hover:text-yellow-600 transition">
+            Login
+          </Link>
         )}
       </nav>
 

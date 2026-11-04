@@ -18,13 +18,14 @@ import { useState } from "react";
 
 import { AuthLogin } from "./Loader";
 import { api } from "../../api/axios";
+import { useAuth } from "../../context/AuthContext";
 
-export const Login = ({ setIsLogin, setIsOrganiser, setIsStudent }) => {
+export const Login = () => {
+  const { login } = useAuth();
   const [show, setShow] = useState(false);
   const [errors, setErrors] = useState({});
   const [authLoader, setAuthLoader] = useState(false);
 
-  
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -70,58 +71,54 @@ export const Login = ({ setIsLogin, setIsOrganiser, setIsStudent }) => {
 
   // Handle login
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  if (!validateForm()) return;
+    if (!validateForm()) return;
 
-  try {
-    setAuthLoader(true);
-    setErrors({});
+    try {
+      setAuthLoader(true);
+      setErrors({});
 
-    const response = await api.post("/signin", {
-      email: formData.email.trim(),
-      password: formData.password,
-    });
-
-    if (response.data.isSuccess) {
-      const category = response.data.category;
-
-      // Set authentication state
-      setIsLogin(true);
-
-      // Set the correct user role
-      setIsOrganiser(category === "Organiser");
-      setIsStudent(category === "Student");
-
-      // Navigate after successful login
-      navigate("/dashboard", {
-        replace: true,
+      const response = await api.post("/signin", {
+        email: formData.email.trim(),
+        password: formData.password,
       });
-    } else {
-      setErrors({
-        server: response.data.message || "Login failed.",
-      });
+
+      if (response.data.isSuccess) {
+        login({
+          ...response.data.user,
+          category: response.data.category,
+        });
+
+        // Navigate after successful login
+        navigate("/dashboard", {
+          replace: true,
+        });
+      } else {
+        setErrors({
+          server: response.data.message || "Login failed.",
+        });
+      }
+    } catch (err) {
+      console.error("LOGIN ERROR:", err.response?.data || err.message);
+
+      const status = err.response?.status;
+      const message = err.response?.data?.message;
+
+      if (status === 403) {
+        setErrors({
+          verification: message || "Please verify your email first.",
+        });
+      } else {
+        setErrors({
+          server: message || "Invalid email or password.",
+        });
+      }
+    } finally {
+      setAuthLoader(false);
     }
-  } catch (err) {
-    console.error("LOGIN ERROR:", err.response?.data || err.message);
-
-    const status = err.response?.status;
-    const message = err.response?.data?.message;
-
-    if (status === 403) {
-      setErrors({
-        verification: message || "Please verify your email first.",
-      });
-    } else {
-      setErrors({
-        server: message || "Invalid email or password.",
-      });
-    }
-  } finally {
-    setAuthLoader(false);
-  }
-};
+  };
 
   return (
     <section className="flex justify-center">
