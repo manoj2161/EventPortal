@@ -16,10 +16,10 @@ app.use(
 );
 app.use(cookieParser());
 app.use(express.json());
-const port = process.env.PORT;
+const portName = process.env.PORT;
 const appName = process.env.APP_NAME;
 connectdb();
 app.use("/api/auth/user", userRouter);
-app.listen(port, () => {
+app.listen(portName, () => {
   console.log(`${appName} is running on port ${port}`);
 });
